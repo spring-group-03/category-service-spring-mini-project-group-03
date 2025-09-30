@@ -6,17 +6,17 @@ spring:
             ddl-auto: update
         show-sql: true
     datasource:
-        url: jdbc:postgresql://localhost:5436/categories-db
-        username: postgres
+        url: jdbc:postgresql://34.124.146.39:5432/mini-project
+        username: group03
         password: 123
     security:
      oauth2:
          resourceserver:
              jwt:
-                 issuer-uri: http://localhost:8080/realms/rest-api
+                 issuer-uri: http://34.124.146.39/realms/rest-api
 eureka:
     client:
         service-url:
-            defaultZone: http://34.126.135.232:8761/eureka/
+            defaultZone: http://34.124.146.39:8761/eureka/
 server:
-    port: 8086
+    port: 8083
