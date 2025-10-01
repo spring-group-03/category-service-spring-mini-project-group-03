@@ -13,7 +13,7 @@ spring:
      oauth2:
          resourceserver:
              jwt:
-                 issuer-uri: http://34.124.146.39/realms/rest-api
+                 issuer-uri: https://auth.kimleang.space/auth/realms/my-realm
 eureka:
     client:
         service-url:
