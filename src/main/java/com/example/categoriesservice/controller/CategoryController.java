@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/v1/category")
 @SecurityRequirement(name = "bearerAuth")
 public class CategoryController extends BaseResponse {
 
