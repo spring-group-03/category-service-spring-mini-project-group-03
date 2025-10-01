@@ -1,6 +1,7 @@
 package com.example.categoriesservice.service.serviceImpl;
 
 import com.example.categoriesservice.client.AuthClient;
+import com.example.categoriesservice.client.ProductClient;
 import com.example.categoriesservice.emuns.CustomerProperty;
 import com.example.categoriesservice.exception.ConflictException;
 import com.example.categoriesservice.exception.NotFoundException;
@@ -31,6 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
 
     private final AuthClient client;
+    private final ProductClient productClient;
 
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -97,6 +99,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategoryById(UUID id) {
         getCategoryById(id);
+        productClient.deleteProductByCategoryId(id);
         repository.deleteById(id);
     }
 
