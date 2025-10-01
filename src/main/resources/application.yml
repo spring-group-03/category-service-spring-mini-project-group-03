@@ -1,27 +1,8 @@
 spring:
     application:
         name: categories-service
-    jpa:
-        hibernate:
-            ddl-auto: update
-        show-sql: true
-    datasource:
-        url: jdbc:postgresql://34.124.146.39:5432/mini-project
-        username: group03
-        password: 123
-    security:
-     oauth2:
-         resourceserver:
-             jwt:
-                 issuer-uri: https://auth.kimleang.space/auth/realms/my-realm
-eureka:
-    client:
-        service-url:
-            defaultZone: http://34.124.146.39:8761/eureka/
-
-    instance:
-        prefer-ip-address: true
-        ip-address: 34.124.146.39
+    config:
+        import: optional:configserver:http://localhost:8888
 server:
     port: 8083
 springdoc:
