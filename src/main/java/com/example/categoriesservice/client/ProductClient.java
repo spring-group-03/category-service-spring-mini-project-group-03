@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "ClientProduct",
-            url = "http://localhost:8085/api/v1/product",
+@FeignClient(name = "product-service",
+            path = "api/v1/products",
             configuration = OpenFeignConfig.class
 )
 public interface ProductClient {

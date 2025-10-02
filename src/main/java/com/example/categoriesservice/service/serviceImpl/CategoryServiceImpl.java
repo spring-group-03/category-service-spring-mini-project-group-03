@@ -105,6 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategoryById(UUID id) {
         Category category = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category not found with id: " + id));
+        productClient.deleteProductByCategoryId(id);
         repository.delete(category);
     }
 
