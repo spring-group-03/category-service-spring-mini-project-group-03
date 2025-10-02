@@ -33,8 +33,8 @@ public class Category {
     public CategoryResponse toResponse(UserResponse response ){
       return  CategoryResponse.builder()
               .categoryId(this.id)
-              .name(this.name)
-              .description(this.description)
+              .name(this.name.trim())
+              .description(this.description.trim())
               .userResponse(response)
               .build();
     };

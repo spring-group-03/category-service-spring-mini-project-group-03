@@ -2,11 +2,15 @@ package com.example.categoriesservice.controller;
 
 import com.example.categoriesservice.emuns.CustomerProperty;
 import com.example.categoriesservice.model.dto.request.CategoryRequest;
-import com.example.categoriesservice.model.dto.respone.*;
+import com.example.categoriesservice.model.dto.respone.ApiResponse;
+import com.example.categoriesservice.model.dto.respone.BaseResponse;
+import com.example.categoriesservice.model.dto.respone.CategoryResponse;
+import com.example.categoriesservice.model.dto.respone.Item;
 import com.example.categoriesservice.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -38,8 +42,8 @@ public class CategoryController extends BaseResponse {
     @GetMapping
     @Operation(summary = "Get pagination list categories",
             description = "Retrieves a list of category in paginated format. You can specify the page number, page size, sorting property (from CustomizeProperty enum), and sort direction")
-    public ResponseEntity<ApiResponse<Item>> getAll ( @RequestParam (defaultValue = "1") int page,
-                                                      @RequestParam (defaultValue = "10")int size,
+    public ResponseEntity<ApiResponse<Item>> getAll ( @Positive @RequestParam (defaultValue = "1") int page,
+                                                      @Positive @RequestParam (defaultValue = "10")int size,
                                                       @RequestParam CustomerProperty sortBy,
                                                       @RequestParam Sort.Direction direction){
         return responseEntity(
@@ -52,7 +56,7 @@ public class CategoryController extends BaseResponse {
 
     @GetMapping("/{category_id}")
     @Operation(summary = "Get category by id",description = "Retrieves the details of a category using the specified product ID." )
-    public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById (@PathVariable("category_id") UUID id){
+    public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById ( @PathVariable("category_id") UUID id){
 
         return responseEntity(
                 true,
@@ -65,7 +69,7 @@ public class CategoryController extends BaseResponse {
     @Operation(summary = "Update category by id",
             description = "Updates the details of an existing category using the provided category ID and categoryRequest payload.")
     public ResponseEntity<ApiResponse<CategoryResponse>> updateCategoryById (@PathVariable("category_id") UUID id,
-                                                                             @RequestBody CategoryRequest request) {
+                                                                             @Valid @RequestBody CategoryRequest request) {
         return responseEntity(
                 true,
                 "Update category successfully.",

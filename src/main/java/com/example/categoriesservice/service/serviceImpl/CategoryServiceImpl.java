@@ -37,9 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
         UserResponse response= client.getCurrentUserProfile().getBody().getPayload();
-       Category category= repository.findByName(request.getName());
+       Category category= repository.findByName(request.getName().trim());
        if (category != null){
-           throw new ConflictException("The category with this name: "+request.getName() +"already used.");
+           throw new ConflictException("The category with this name: "+request.getName() +" already used.");
        }
 
         return repository.save(request.toCategory(response.getUserId())).toResponse(response);
@@ -87,15 +87,15 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse updateCategoryById(UUID id, CategoryRequest request) {
         UserResponse userResponse= client.getCurrentUserProfile().getBody().getPayload();
         getCategoryById(id);
-        Category category1= repository.findByName(request.getName());
+        Category category1= repository.findByName(request.getName().trim());
         if (category1 != null){
-            throw new ConflictException("The category with this name: "+request.getName() +"already used.");
+            throw new ConflictException("The category with this name: "+request.getName() +" already used.");
         }
 
         Category category= Category.builder()
                 .id(id)
-                .name(request.getName())
-                .description(request.getDescription())
+                .name(request.getName().trim())
+                .description(request.getDescription().trim())
                 .userId(userResponse.getUserId())
                 .build();
         return repository.save(category).toResponse(userResponse) ;
@@ -103,9 +103,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategoryById(UUID id) {
-        getCategoryById(id);
-        productClient.deleteProductByCategoryId(id);
-        repository.deleteById(id);
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category not found with id: " + id));
+        repository.delete(category);
     }
 
 }
