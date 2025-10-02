@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(
         name = "auth-service",
-        path = "api/v1/profiles",
+        path = "api/v1/users",
         configuration = OpenFeignConfig.class)
 public interface AuthClient {
 
