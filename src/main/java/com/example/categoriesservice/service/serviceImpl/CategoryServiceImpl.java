@@ -87,6 +87,11 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse updateCategoryById(UUID id, CategoryRequest request) {
         UserResponse userResponse= client.getCurrentUserProfile().getBody().getPayload();
         getCategoryById(id);
+        Category category1= repository.findByName(request.getName());
+        if (category1 != null){
+            throw new ConflictException("The category with this name: "+request.getName() +"already used.");
+        }
+
         Category category= Category.builder()
                 .id(id)
                 .name(request.getName())

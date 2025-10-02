@@ -17,13 +17,13 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/category")
+@RequestMapping("/api/v1/categories")
 @SecurityRequirement(name = "bearerAuth")
 public class CategoryController extends BaseResponse {
 
     private final CategoryService service;
 
-    @PostMapping("/create")
+    @PostMapping
     @Operation(summary = "Create category",
             description = " Creates a new category record in the system using the provided categoryRequest. Returns the details of the newly created category.")
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory (
