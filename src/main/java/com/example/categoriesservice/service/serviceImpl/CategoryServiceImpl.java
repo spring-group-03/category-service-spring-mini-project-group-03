@@ -13,13 +13,14 @@ import com.example.categoriesservice.model.dto.respone.UserResponse;
 import com.example.categoriesservice.model.entity.Category;
 import com.example.categoriesservice.repository.CategoryRepository;
 import com.example.categoriesservice.service.CategoryService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import io.github.resilience4j.circuitbreaker.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,18 +35,21 @@ public class CategoryServiceImpl implements CategoryService {
     private final AuthClient client;
     private final ProductClient productClient;
 
+
     @Override
+    @CircuitBreaker(name = "profileCB", fallbackMethod = "categoryFallbackMethod")
     public CategoryResponse createCategory(CategoryRequest request) {
         UserResponse response= client.getCurrentUserProfile().getBody().getPayload();
        Category category= repository.findByName(request.getName().trim());
        if (category != null){
-           throw new ConflictException("The category with this name: "+request.getName() +" already used.");
+           throw new ConflictException("The cat egory with this name: "+request.getName() +" already used.");
        }
 
         return repository.save(request.toCategory(response.getUserId())).toResponse(response);
     }
 
     @Override
+    @CircuitBreaker(name = "profileCB", fallbackMethod = "paginatedCategoryFallbackMethod")
     public Item getAll(int page, int size,  CustomerProperty customerProperty, Sort.Direction direction) {
 
         String sortField;
@@ -72,6 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CircuitBreaker(name = "profileCB", fallbackMethod = "categoryFallbackMethod")
     public CategoryResponse getCategoryById(UUID id) {
         UserResponse userResponse= client.getCurrentUserProfile().getBody().getPayload();
         Category category = repository.findById(id)
@@ -84,6 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CircuitBreaker(name = "profileCB", fallbackMethod = "categoryFallbackMethod")
     public CategoryResponse updateCategoryById(UUID id, CategoryRequest request) {
         UserResponse userResponse= client.getCurrentUserProfile().getBody().getPayload();
         getCategoryById(id);
@@ -108,5 +114,10 @@ public class CategoryServiceImpl implements CategoryService {
         productClient.deleteProductByCategoryId(id);
         repository.delete(category);
     }
-
+    public Item paginatedCategoryFallbackMethod(Throwable t) {
+        throw new NotFoundException("Auth service not available");
+    }
+    public CategoryResponse categoryFallbackMethod(Throwable t) {
+        throw new NotFoundException("Auth service not available");
+    }
 }
